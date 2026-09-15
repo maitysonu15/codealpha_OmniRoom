@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — OmniRoom</title>
+  <meta name="description" content="Sign in to your OmniRoom account to access meetings, files, and collaborative workspaces.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    <!-- Left Hero Showcase Card -->
+    <div class="auth-hero-section">
+      <div class="auth-hero-brand">
+        <svg class="brand-logo-svg" width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="omGlossyLogoBgLog" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="35%" stop-color="#6366f1"/>
+              <stop offset="70%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#d946ef"/>
+            </linearGradient>
+            <linearGradient id="omGlossyGlassShineLog" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+              <stop offset="60%" stop-color="#ffffff" stop-opacity="0.1"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="omGlossyLensGlowLog" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="40%" stop-color="#e0e7ff"/>
+              <stop offset="75%" stop-color="#c7d2fe"/>
+              <stop offset="100%" stop-color="#818cf8"/>
+            </radialGradient>
+            <filter id="omGlossyShadowLog" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.35"/>
+            </filter>
+          </defs>
+          <rect x="1" y="1" width="38" height="38" rx="12" fill="url(#omGlossyLogoBgLog)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <path d="M2 13C2 6.92487 6.92487 2 13 2H27C33.0751 2 38 6.92487 38 13V18C38 18 29.5 22 20 22C10.5 22 2 18 2 18V13Z" fill="url(#omGlossyGlassShineLog)"/>
+          <g filter="url(#omGlossyShadowLog)">
+            <rect x="9" y="13" width="14" height="14" rx="4" fill="url(#omGlossyLensGlowLog)"/>
+            <circle cx="16" cy="20" r="4" fill="#4f46e5" opacity="0.85"/>
+            <circle cx="16" cy="20" r="2.2" fill="#38bdf8"/>
+            <circle cx="15.2" cy="19.2" r="0.9" fill="#ffffff"/>
+            <path d="M23 16.5L30 12.2C30.6 11.8 31.4 12.2 31.4 13V27C31.4 27.8 30.6 28.2 30 27.8L23 23.5V16.5Z" fill="url(#omGlossyLensGlowLog)"/>
+            <path d="M24 17.5L30 13.8V17L24 19.5V17.5Z" fill="#ffffff" fill-opacity="0.45"/>
+          </g>
+        </svg>
+        <span>Omni<span style="color: var(--primary);">Room</span></span>
+      </div>
+
+      <div class="auth-hero-content">
+        <h1>One place.<br>One meeting.<br><span class="text-gradient">One seamless connection.</span></h1>
+        <p>Sign in to launch instant video calls, access past meeting recordings & files, and collaborate with your team.</p>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature-item">
+            <span>✓</span> WebRTC Low-Latency HD Video & Audio
+          </div>
+          <div class="auth-hero-feature-item">
+            <span>✓</span> Synchronized WebSocket Chat & Canvas Whiteboard
+          </div>
+          <div class="auth-hero-feature-item">
+            <span>✓</span> Django Session Authentication & Authorized Files
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: 0.85rem; color: #64748b;">
+        © 2026 OmniRoom Platform. All rights reserved.
+      </div>
+    </div>
+
+    <!-- Right Auth Form Card -->
+    <div class="auth-form-section">
+      <div class="glass-card auth-card">
+        <div class="auth-header">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h2 class="auth-title">Sign In</h2>
+            <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+          </div>
+          <p class="auth-subtitle">Enter your account credentials to access your workspace</p>
+        </div>
+
+        <div id="auth-alert" class="alert alert-danger"></div>
+
+        <!-- Google 1-Click Auth with Firebase -->
+        <button type="button" class="btn-google-auth" onclick="handleGoogleAuth()" style="margin-bottom: 16px;">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="auth-modal-divider" style="margin-bottom: 20px;">
+          <span>or sign in with credentials</span>
+        </div>
+
+        <form id="form-login" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="login-username">Username or Email</label>
+            <input type="text" id="login-username" class="form-input" placeholder="Enter your username" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required>
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', this)" title="Toggle password visibility">
+                <svg class="svg-icon" style="width: 16px; height: 16px;" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-options">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-secondary);">
+              <input type="checkbox" id="remember-me" checked />
+              Remember me
+            </label>
+            <a href="forgot-password.html">Forgot password?</a>
+          </div>
+
+          <button type="submit" id="btn-login-submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">
+            Sign In to OmniRoom
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          Don't have an account? <a href="register.html" style="font-weight: 600;">Create account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await checkAuthStatus();
+      if (user) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || 'dashboard.html';
+        window.location.href = redirect;
+      }
+    });
+  </script>
+</body>
+</html>

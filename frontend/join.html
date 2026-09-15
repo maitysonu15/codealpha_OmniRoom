@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Meeting & Device Preview — OmniRoom</title>
+  <meta name="description" content="Check your camera, microphone, and audio settings before joining the OmniRoom meeting room.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/meeting.css">
+  <style>
+    .join-container {
+      max-width: 1080px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 36px;
+      align-items: center;
+      min-height: calc(100vh - 120px);
+    }
+
+    .preview-card {
+      background: #0f1626;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-video-box {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #060911;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .preview-video-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-controls {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .mic-meter-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mic-meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #06b6d4);
+      border-radius: var(--radius-full);
+      transition: width 0.08s ease-out;
+    }
+
+    .join-form-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    @media (max-width: 860px) {
+      .join-container {
+        grid-template-columns: 1fr;
+        margin: 20px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="brand-logo">
+      <svg class="brand-logo-svg" width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="omGlossyLogoBgJoin" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="35%" stop-color="#6366f1"/>
+            <stop offset="70%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#d946ef"/>
+          </linearGradient>
+          <linearGradient id="omGlossyGlassShineJoin" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+            <stop offset="60%" stop-color="#ffffff" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="omGlossyLensGlowJoin" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="40%" stop-color="#e0e7ff"/>
+            <stop offset="75%" stop-color="#c7d2fe"/>
+            <stop offset="100%" stop-color="#818cf8"/>
+          </radialGradient>
+          <filter id="omGlossyShadowJoin" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <rect x="1" y="1" width="38" height="38" rx="12" fill="url(#omGlossyLogoBgJoin)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <path d="M2 13C2 6.92487 6.92487 2 13 2H27C33.0751 2 38 6.92487 38 13V18C38 18 29.5 22 20 22C10.5 22 2 18 2 18V13Z" fill="url(#omGlossyGlassShineJoin)"/>
+        <g filter="url(#omGlossyShadowJoin)">
+          <rect x="9" y="13" width="14" height="14" rx="4" fill="url(#omGlossyLensGlowJoin)"/>
+          <circle cx="16" cy="20" r="4" fill="#4f46e5" opacity="0.85"/>
+          <circle cx="16" cy="20" r="2.2" fill="#38bdf8"/>
+          <circle cx="15.2" cy="19.2" r="0.9" fill="#ffffff"/>
+          <path d="M23 16.5L30 12.2C30.6 11.8 31.4 12.2 31.4 13V27C31.4 27.8 30.6 28.2 30 27.8L23 23.5V16.5Z" fill="url(#omGlossyLensGlowJoin)"/>
+          <path d="M24 17.5L30 13.8V17L24 19.5V17.5Z" fill="#ffffff" fill-opacity="0.45"/>
+        </g>
+      </svg>
+      <span>Open<span style="color: var(--primary);">Meet</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+    </div>
+  </nav>
+
+  <main class="join-container">
+    <!-- Left: Audio & Video Device Preview -->
+    <div class="preview-card">
+      <div class="preview-video-box">
+        <video id="preview-video-elem" autoplay playsinline muted style="display: none;"></video>
+        <div id="preview-avatar-elem" class="video-avatar-fallback" style="width: 100px; height: 100px; font-size: 2.5rem;">U</div>
+        <div class="participant-overlay" style="left: 14px; bottom: 14px; display: flex; align-items: center; gap: 6px;">
+          <span id="preview-mic-status-icon" class="mic-status-icon" style="display: flex; align-items: center;">
+            <svg class="svg-icon" style="width: 14px; height: 14px; stroke: #10b981;" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          </span>
+          <span id="preview-user-tag">You</span>
+        </div>
+      </div>
+
+      <!-- Live Mic Volume Meter -->
+      <div style="width: 100%; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px;">
+          <span>Microphone Activity</span>
+          <span id="mic-status-text">Testing audio...</span>
+        </div>
+        <div class="mic-meter-container">
+          <div id="mic-meter-bar" class="mic-meter-fill"></div>
+        </div>
+      </div>
+
+      <!-- Quick Toggles -->
+      <div class="preview-controls">
+        <button id="btn-toggle-mic-preview" class="ctrl-btn active" title="Toggle Microphone">
+          <svg id="svg-preview-mic" class="svg-icon" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <button id="btn-toggle-cam-preview" class="ctrl-btn active" title="Toggle Camera">
+          <svg id="svg-preview-cam" class="svg-icon" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </button>
+      </div>
+
+      <!-- Device Selectors -->
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" style="font-size: 0.78rem;">Camera Device</label>
+          <select id="select-camera" class="form-input" style="padding: 8px 12px; font-size: 0.85rem;">
+            <option value="">Default Camera</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" style="font-size: 0.78rem;">Microphone Device</label>
+          <select id="select-mic" class="form-input" style="padding: 8px 12px; font-size: 0.85rem;">
+            <option value="">Default Microphone</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Join Form -->
+    <div class="join-form-card">
+      <div style="margin-bottom: 24px;">
+        <span class="badge badge-primary" style="margin-bottom: 12px;">Ready to Join</span>
+        <h2 style="font-size: 2rem; margin-bottom: 8px;">Enter Meeting Room</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Check your audio and video before entering the call.</p>
+      </div>
+
+      <form id="form-join-room" onsubmit="handleJoinSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="join-meeting-code">Meeting Code or Invite Link</label>
+          <input type="text" id="join-meeting-code" class="form-input" placeholder="e.g. abc-defg-hij" required autofocus />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="join-display-name">Display Name</label>
+          <input type="text" id="join-display-name" class="form-input" placeholder="Your name" required />
+        </div>
+
+        <button type="submit" id="btn-join-now" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg class="svg-icon" style="width: 20px; height: 20px;" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          <span>Join Meeting Now</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+        Don't have a code? <a href="dashboard.html" style="font-weight: 600;">Create your own meeting</a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    let previewStream = null;
+    let isMicOn = true;
+    let isCamOn = true;
+    let audioCtx = null;
+    let analyser = null;
+    let animFrameId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check auth status
+      const user = await checkAuthStatus();
+      const nameInput = document.getElementById('join-display-name');
+      const userTag = document.getElementById('preview-user-tag');
+      const avatarElem = document.getElementById('preview-avatar-elem');
+
+      if (user) {
+        if (nameInput) nameInput.value = user.username;
+        if (userTag) userTag.textContent = `${user.username} (You)`;
+        if (avatarElem) avatarElem.textContent = user.username.charAt(0).toUpperCase();
+      }
+
+      // Check URL query parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeParam = urlParams.get('code');
+      if (codeParam) {
+        const codeInput = document.getElementById('join-meeting-code');
+        if (codeInput) codeInput.value = codeParam;
+      }
+
+      initPreviewMedia();
+      setupPreviewListeners();
+    });
+
+    async function initPreviewMedia() {
+      const videoElem = document.getElementById('preview-video-elem');
+      const avatarElem = document.getElementById('preview-avatar-elem');
+
+      try {
+        previewStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        if (videoElem) {
+          videoElem.srcObject = previewStream;
+          videoElem.style.display = 'block';
+          if (avatarElem) avatarElem.style.display = 'none';
+        }
+
+        // Setup Audio Analyser for visualizer
+        setupAudioVisualizer(previewStream);
+
+        // Populate device dropdowns
+        populateDeviceList();
+      } catch (err) {
+        console.warn('Camera/Microphone access blocked or unavailable:', err);
+        showToast('Camera/microphone preview not active (using avatar fallback)', 'info');
+        if (videoElem) videoElem.style.display = 'none';
+        if (avatarElem) avatarElem.style.display = 'flex';
+      }
+    }
+
+    function setupAudioVisualizer(stream) {
+      try {
+        const audioTracks = stream.getAudioTracks();
+        if (audioTracks.length === 0) return;
+
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioCtx.createMediaStreamSource(stream);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64;
+        source.connect(analyser);
+
+        const meterBar = document.getElementById('mic-meter-bar');
+        const statusText = document.getElementById('mic-status-text');
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        function renderMeter() {
+          if (!isMicOn) {
+            if (meterBar) meterBar.style.width = '0%';
+            if (statusText) statusText.textContent = 'Muted';
+            animFrameId = requestAnimationFrame(renderMeter);
+            return;
+          }
+
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+          }
+          const avg = sum / dataArray.length;
+          const percentage = Math.min(100, Math.round((avg / 128) * 100));
+
+          if (meterBar) meterBar.style.width = `${percentage}%`;
+          if (statusText) statusText.textContent = percentage > 5 ? '🟢 Audio detected' : 'Listening...';
+
+          animFrameId = requestAnimationFrame(renderMeter);
+        }
+
+        renderMeter();
+      } catch (e) {
+        console.warn('Web Audio API not supported:', e);
+      }
+    }
+
+    async function populateDeviceList() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const camSelect = document.getElementById('select-camera');
+        const micSelect = document.getElementById('select-mic');
+
+        if (camSelect) camSelect.innerHTML = '';
+        if (micSelect) micSelect.innerHTML = '';
+
+        devices.forEach(device => {
+          const option = document.createElement('option');
+          option.value = device.deviceId;
+          if (device.kind === 'videoinput') {
+            option.text = device.label || `Camera ${camSelect.children.length + 1}`;
+            if (camSelect) camSelect.appendChild(option);
+          } else if (device.kind === 'audioinput') {
+            option.text = device.label || `Microphone ${micSelect.children.length + 1}`;
+            if (micSelect) micSelect.appendChild(option);
+          }
+        });
+      } catch (e) {
+        console.warn('Device enumeration failed:', e);
+      }
+    }
+
+    function setupPreviewListeners() {
+      // Toggle Mic
+      const btnMic = document.getElementById('btn-toggle-mic-preview');
+      const micIcon = document.getElementById('preview-mic-status-icon');
+      if (btnMic) {
+        btnMic.addEventListener('click', () => {
+          isMicOn = !isMicOn;
+          if (previewStream && previewStream.getAudioTracks().length > 0) {
+            previewStream.getAudioTracks()[0].enabled = isMicOn;
+          }
+          btnMic.classList.toggle('off', !isMicOn);
+          btnMic.classList.toggle('active', isMicOn);
+          btnMic.innerHTML = isMicOn
+            ? `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`
+            : `<svg class="svg-icon" viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`;
+          if (micIcon) {
+            micIcon.innerHTML = isMicOn
+              ? `<svg class="svg-icon" style="width: 14px; height: 14px; stroke: #10b981;" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>`
+              : `<svg class="svg-icon" style="width: 14px; height: 14px; stroke: #f43f5e;" viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/></svg>`;
+          }
+        });
+      }
+
+      // Toggle Cam
+      const btnCam = document.getElementById('btn-toggle-cam-preview');
+      const videoElem = document.getElementById('preview-video-elem');
+      const avatarElem = document.getElementById('preview-avatar-elem');
+
+      if (btnCam) {
+        btnCam.addEventListener('click', () => {
+          isCamOn = !isCamOn;
+          if (previewStream && previewStream.getVideoTracks().length > 0) {
+            previewStream.getVideoTracks()[0].enabled = isCamOn;
+          }
+          btnCam.classList.toggle('off', !isCamOn);
+          btnCam.classList.toggle('active', isCamOn);
+          btnCam.innerHTML = isCamOn
+            ? `<svg class="svg-icon" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`
+            : `<svg class="svg-icon" viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`;
+
+          if (isCamOn && previewStream) {
+            if (videoElem) videoElem.style.display = 'block';
+            if (avatarElem) avatarElem.style.display = 'none';
+          } else {
+            if (videoElem) videoElem.style.display = 'none';
+            if (avatarElem) avatarElem.style.display = 'flex';
+          }
+        });
+      }
+    }
+
+    async function handleJoinSubmit(e) {
+      e.preventDefault();
+      const codeInput = document.getElementById('join-meeting-code');
+      let rawCode = codeInput ? codeInput.value.trim() : '';
+
+      // Extract code if user pasted a full URL
+      if (rawCode.includes('code=')) {
+        const match = rawCode.match(/code=([a-zA-Z0-9-]+)/);
+        if (match) rawCode = match[1];
+      }
+
+      if (!rawCode) {
+        showToast('Please enter a meeting code.', 'error');
+        return;
+      }
+
+      // Stop local preview tracks so meeting page can claim hardware
+      if (previewStream) {
+        previewStream.getTracks().forEach(t => t.stop());
+      }
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      if (audioCtx) audioCtx.close();
+
+      showToast('Joining OmniRoom room...', 'success');
+      setTimeout(() => {
+        window.location.href = `meeting.html?code=${encodeURIComponent(rawCode)}&mic=${isMicOn}&cam=${isCamOn}`;
+      }, 400);
+    }
+  </script>
+</body>
+</html>

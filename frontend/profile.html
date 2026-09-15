@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile & Settings — OmniRoom</title>
+  <meta name="description" content="Manage your OmniRoom account settings, profile information, and preferences.">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="brand-logo">
+      <svg class="brand-logo-svg" width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="omGlossyLogoBgProf" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="35%" stop-color="#6366f1"/>
+            <stop offset="70%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#d946ef"/>
+          </linearGradient>
+          <linearGradient id="omGlossyGlassShineProf" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+            <stop offset="60%" stop-color="#ffffff" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="omGlossyLensGlowProf" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="40%" stop-color="#e0e7ff"/>
+            <stop offset="75%" stop-color="#c7d2fe"/>
+            <stop offset="100%" stop-color="#818cf8"/>
+          </radialGradient>
+          <filter id="omGlossyShadowProf" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <rect x="1" y="1" width="38" height="38" rx="12" fill="url(#omGlossyLogoBgProf)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <path d="M2 13C2 6.92487 6.92487 2 13 2H27C33.0751 2 38 6.92487 38 13V18C38 18 29.5 22 20 22C10.5 22 2 18 2 18V13Z" fill="url(#omGlossyGlassShineProf)"/>
+        <g filter="url(#omGlossyShadowProf)">
+          <rect x="9" y="13" width="14" height="14" rx="4" fill="url(#omGlossyLensGlowProf)"/>
+          <circle cx="16" cy="20" r="4" fill="#4f46e5" opacity="0.85"/>
+          <circle cx="16" cy="20" r="2.2" fill="#38bdf8"/>
+          <circle cx="15.2" cy="19.2" r="0.9" fill="#ffffff"/>
+          <path d="M23 16.5L30 12.2C30.6 11.8 31.4 12.2 31.4 13V27C31.4 27.8 30.6 28.2 30 27.8L23 23.5V16.5Z" fill="url(#omGlossyLensGlowProf)"/>
+          <path d="M24 17.5L30 13.8V17L24 19.5V17.5Z" fill="#ffffff" fill-opacity="0.45"/>
+        </g>
+      </svg>
+      <span>Omni<span style="color: var(--primary);">Room</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" class="btn btn-secondary btn-sm">← Back to Dashboard</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+      <button class="btn btn-ghost btn-sm" onclick="handleLogout()">Sign Out</button>
+    </div>
+  </nav>
+
+  <main style="max-width: 860px; margin: 40px auto; padding: 0 24px;">
+    <div style="margin-bottom: 32px;">
+      <h1 style="font-size: 2.2rem; margin-bottom: 8px;">Account Profile & Preferences</h1>
+      <p style="color: var(--text-muted);">Manage your personal information, security credentials, and workspace defaults.</p>
+    </div>
+
+    <!-- Profile Overview Card -->
+    <div class="settings-section-card">
+      <div class="settings-section-header" style="display: flex; align-items: center; gap: 20px;">
+        <div id="profile-avatar-display" class="user-avatar-badge" style="width: 64px; height: 64px; font-size: 1.8rem;">
+          U
+        </div>
+        <div>
+          <h2 id="profile-username-display" style="font-size: 1.4rem;">Username</h2>
+          <p id="profile-email-display" style="color: var(--text-muted); font-size: 0.9rem;">user@example.com</p>
+          <span class="badge badge-success" style="margin-top: 6px;">Active Account</span>
+        </div>
+      </div>
+
+      <form id="form-profile-details" onsubmit="handleProfileUpdate(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label" for="profile-first-name">First Name</label>
+            <input type="text" id="profile-first-name" class="form-input" placeholder="e.g. Alex" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profile-last-name">Last Name</label>
+            <input type="text" id="profile-last-name" class="form-input" placeholder="e.g. Vance" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profile-email-input">Email Address</label>
+          <input type="email" id="profile-email-input" class="form-input" placeholder="name@example.com" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+
+    <!-- Security & Password Card -->
+    <div class="settings-section-card">
+      <div class="settings-section-header">
+        <h3 style="font-size: 1.25rem;">Security & Password</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Update your account password securely.</p>
+      </div>
+
+      <form id="form-password-update" onsubmit="handlePasswordUpdate(event)">
+        <div class="form-group">
+          <label class="form-label" for="new-password">New Password</label>
+          <input type="password" id="new-password" class="form-input" placeholder="Minimum 6 characters" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirm-new-password">Confirm New Password</label>
+          <input type="password" id="confirm-new-password" class="form-input" placeholder="Confirm your new password" required />
+        </div>
+        <button type="submit" class="btn btn-secondary">Update Password</button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await checkAuthStatus();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('profile-username-display').textContent = user.username;
+      document.getElementById('profile-email-display').textContent = user.email || 'No email specified';
+      document.getElementById('profile-avatar-display').textContent = user.username.charAt(0).toUpperCase();
+
+      const emailInput = document.getElementById('profile-email-input');
+      const firstNameInput = document.getElementById('profile-first-name');
+      const lastNameInput = document.getElementById('profile-last-name');
+
+      if (emailInput && user.email) emailInput.value = user.email;
+      if (firstNameInput && user.first_name) firstNameInput.value = user.first_name;
+      if (lastNameInput && user.last_name) lastNameInput.value = user.last_name;
+    });
+
+    async function handleProfileUpdate(e) {
+      e.preventDefault();
+      const email = document.getElementById('profile-email-input').value.trim();
+      const first_name = document.getElementById('profile-first-name').value.trim();
+      const last_name = document.getElementById('profile-last-name').value.trim();
+
+      try {
+        const res = await apiFetch('/auth/profile/', {
+          method: 'PATCH',
+          body: JSON.stringify({ email, first_name, last_name })
+        });
+        showToast('Profile information updated!', 'success');
+        document.getElementById('profile-email-display').textContent = email || 'No email specified';
+      } catch (err) {
+        showToast(`Update failed: ${err.message}`, 'error');
+      }
+    }
+
+    async function handlePasswordUpdate(e) {
+      e.preventDefault();
+      const new_password = document.getElementById('new-password').value;
+      const confirm_password = document.getElementById('confirm-new-password').value;
+
+      if (new_password.length < 6) {
+        showToast('Password must be at least 6 characters.', 'error');
+        return;
+      }
+      if (new_password !== confirm_password) {
+        showToast('Passwords do not match.', 'error');
+        return;
+      }
+
+      try {
+        await apiFetch('/auth/profile/', {
+          method: 'PATCH',
+          body: JSON.stringify({ new_password })
+        });
+        showToast('Password successfully changed!', 'success');
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-new-password').value = '';
+      } catch (err) {
+        showToast(`Password update failed: ${err.message}`, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

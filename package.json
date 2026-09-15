@@ -1,0 +1,26 @@
+{
+  "name": "omniroom",
+  "version": "1.0.0",
+  "description": "OmniRoom — Real-time video conferencing and workspace collaboration platform",
+  "scripts": {
+    "dev": "python backend/manage.py runserver 8080",
+    "dev:backend": "python backend/manage.py runserver 8080",
+    "dev:frontend": "npx serve frontend -l 3000",
+    "start": "python backend/manage.py runserver 8080",
+    "migrate": "python backend/manage.py migrate",
+    "makemigrations": "python backend/manage.py makemigrations",
+    "test": "python backend/manage.py test accounts",
+    "check": "python backend/manage.py check"
+  },
+  "keywords": [
+    "video-conferencing",
+    "webrtc",
+    "django",
+    "django-channels",
+    "websockets",
+    "collaboration"
+  ],
+  "author": "OmniRoom Team",
+  "license": "MIT"
+}
+

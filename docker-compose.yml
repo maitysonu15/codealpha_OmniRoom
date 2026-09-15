@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: omniroom_web
+    ports:
+      - "8080:8080"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=production-secret-key-change-this-in-production
+      - ALLOWED_HOSTS=*
+      - DATABASE_URL=postgres://omniroom:omniroom_password@db:5432/omniroom_db
+      - REDIS_URL=redis://redis:6379/0
+      - USE_REDIS=True
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080
+      - CORS_ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: omniroom_postgres
+    environment:
+      - POSTGRES_DB=omniroom_db
+      - POSTGRES_USER=omniroom
+      - POSTGRES_PASSWORD=omniroom_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: omniroom_redis
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
